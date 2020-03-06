@@ -4,7 +4,7 @@ Create a file that contains the contents from the clipboard.
 
 ## Installation
 
-go get -u github.com/xyproto/pastefile
+    go get -u github.com/xyproto/pastefile
 
 ## General info
 
