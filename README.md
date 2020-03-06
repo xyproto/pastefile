@@ -8,6 +8,6 @@ go get -u github.com/xyproto/pastefile
 
 ## General info
 
-* Version: 0.2.0
+* Version: 0.3.0
 * License: MIT
 * Author: Alexander F. Rødseth <xyproto@archlinux.org>
