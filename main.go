@@ -7,7 +7,24 @@ import (
 	"os"
 )
 
-const versionString = "pastefile 0.1.0"
+const versionString = "pastefile 0.3.0"
+
+// Write to a file, using the contents from the clipboard
+func writeFromClipboard(filename string) (int, error) {
+	// Read the clipboard
+	contents, err := clip.ReadAllBytes()
+	if err != nil {
+		return 0, err
+	}
+	// Write to file
+	f, err := os.Create(filename)
+	if err != nil {
+		return 0, err
+	}
+	defer f.Close()
+	bytesWritten, err := f.Write(contents)
+	return bytesWritten, err
+}
 
 func main() {
 	o := textoutput.New()
@@ -15,6 +32,7 @@ func main() {
 		Name:  "pastefile",
 		Usage: "create a file that contains the contents from the clipboard",
 		Flags: []cli.Flag{
+			&cli.BoolFlag{Name: "silent", Aliases: []string{"s"}},
 			&cli.BoolFlag{Name: "version", Aliases: []string{"V"}},
 		},
 		Action: func(c *cli.Context) error {
@@ -27,18 +45,13 @@ func main() {
 			if c.NArg() > 0 {
 				filename = c.Args().Slice()[0]
 			}
-			// Read the clipboard
-			contents, err := clip.ReadAllBytes()
+			bytesWritten, err := writeFromClipboard(filename)
 			if err != nil {
 				o.ErrExit(err.Error())
 			}
-			// Write to file
-			f, err := os.Create(filename)
-			if err != nil {
-				o.ErrExit(err.Error())
+			if !c.Bool("silent") {
+				o.Printf("<blue>%d bytes written to</blue> <green>%s</green>\n", bytesWritten, filename)
 			}
-			defer f.Close()
-			f.Write(contents)
 			return nil
 		},
 	}).Run(os.Args); appErr != nil {
