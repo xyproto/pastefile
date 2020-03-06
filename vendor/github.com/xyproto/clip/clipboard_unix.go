@@ -15,10 +15,13 @@ const (
 	wlpaste            = "wl-paste"
 	termuxClipboardGet = "termux-clipboard-get"
 	termuxClipboardSet = "termux-clipboard-set"
+	powershellExe      = "powershell.exe"
+	clipExe            = "clip.exe"
 )
 
 var (
 	Primary bool
+	trimDos bool
 
 	pasteCmdArgs []string
 	copyCmdArgs  []string
@@ -28,6 +31,9 @@ var (
 
 	xclipPasteArgs = []string{xclip, "-out", "-selection", "clipboard"}
 	xclipCopyArgs  = []string{xclip, "-in", "-selection", "clipboard"}
+
+	powershellExePasteArgs = []string{powershellExe, "Get-Clipboard"}
+	clipExeCopyArgs        = []string{clipExe}
 
 	wlpasteArgs = []string{wlpaste, "--no-newline"}
 	wlcopyArgs  = []string{wlcopy}
@@ -39,6 +45,18 @@ var (
 )
 
 func init() {
+	if WSL() {
+		pasteCmdArgs = powershellExePasteArgs
+		copyCmdArgs = clipExeCopyArgs
+		trimDos = true
+
+		if _, err := exec.LookPath(clipExe); err == nil {
+			if _, err := exec.LookPath(powershellExe); err == nil {
+				return
+			}
+		}
+	}
+
 	if os.Getenv("WAYLAND_DISPLAY") != "" {
 		pasteCmdArgs = wlpasteArgs
 		copyCmdArgs = wlcopyArgs
@@ -73,6 +91,16 @@ func init() {
 		}
 	}
 
+	pasteCmdArgs = powershellExePasteArgs
+	copyCmdArgs = clipExeCopyArgs
+	trimDos = true
+
+	if _, err := exec.LookPath(clipExe); err == nil {
+		if _, err := exec.LookPath(powershellExe); err == nil {
+			return
+		}
+	}
+
 	Unsupported = true
 }
 
@@ -97,7 +125,7 @@ func readAllBytes() ([]byte, error) {
 	pasteCmd := getPasteCommand()
 	out, err := pasteCmd.Output()
 	if err != nil {
-		return []byte{}, err
+		return []byte{}, errors.New("could not run: " + pasteCmd.String())
 	}
 	return out, nil
 }
@@ -107,7 +135,11 @@ func readAll() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return string(b), nil
+	result := string(b)
+	if trimDos && len(result) > 1 {
+		result = result[:len(result)-2]
+	}
+	return result, nil
 }
 
 func writeAllBytes(b []byte) error {
@@ -134,4 +166,13 @@ func writeAllBytes(b []byte) error {
 
 func writeAll(text string) error {
 	return writeAllBytes([]byte(text))
+}
+
+// WSL returns true if this is a WSL distro
+func WSL() bool {
+	// the official way to detect a WSL distro
+	// ref: https://github.com/microsoft/WSL/issues/423
+	cmd := exec.Command("/bin/sh", "-c", "cat /proc/version | grep -o Microsoft")
+	_, err := cmd.Output()
+	return err == nil
 }
