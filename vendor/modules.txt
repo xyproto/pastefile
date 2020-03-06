@@ -1,0 +1,24 @@
+# github.com/atotto/clipboard v0.1.2
+## explicit
+github.com/atotto/clipboard
+# github.com/cpuguy83/go-md2man/v2 v2.0.0
+## explicit
+github.com/cpuguy83/go-md2man/v2/md2man
+# github.com/pkg/term v0.0.0-20190109203006-aa71e9d9e942
+github.com/pkg/term
+github.com/pkg/term/termios
+# github.com/russross/blackfriday/v2 v2.0.1
+github.com/russross/blackfriday/v2
+# github.com/shurcooL/sanitized_anchor_name v1.0.0
+github.com/shurcooL/sanitized_anchor_name
+# github.com/urfave/cli/v2 v2.1.1
+## explicit
+github.com/urfave/cli/v2
+# github.com/xyproto/textoutput v1.11.0
+## explicit
+github.com/xyproto/textoutput
+# github.com/xyproto/vt100 v1.8.3
+github.com/xyproto/vt100
+# golang.org/x/sys v0.0.0-20200302150141-5c8b2ff67527
+## explicit
+golang.org/x/sys/unix
