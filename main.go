@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/atotto/clipboard"
 	"github.com/urfave/cli/v2"
+	"github.com/xyproto/clip"
 	"github.com/xyproto/textoutput"
 	"os"
 )
@@ -28,7 +28,7 @@ func main() {
 				filename = c.Args().Slice()[0]
 			}
 			// Read the clipboard
-			contents, err := clipboard.ReadAll()
+			contents, err := clip.ReadAllBytes()
 			if err != nil {
 				o.ErrExit(err.Error())
 			}
@@ -37,8 +37,8 @@ func main() {
 			if err != nil {
 				o.ErrExit(err.Error())
 			}
-			f.WriteString(contents)
-			f.Close()
+			defer f.Close()
+			f.Write(contents)
 			return nil
 		},
 	}).Run(os.Args); appErr != nil {
