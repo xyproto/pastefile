@@ -2,6 +2,10 @@
 
 Create a file that contains the contents from the clipboard.
 
+## Requirements
+
+* Go > 1.12
+
 ## Installation
 
     go get -u github.com/xyproto/pastefile
