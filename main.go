@@ -7,7 +7,10 @@ import (
 	"os"
 )
 
-const versionString = "pastefile 0.3.0"
+const (
+	versionString   = "pastefile 0.3.1"
+	defaultFilename = "pastefile.txt"
+)
 
 // Write to a file, using the contents from the clipboard
 func writeFromClipboard(filename string) (int, error) {
@@ -22,8 +25,7 @@ func writeFromClipboard(filename string) (int, error) {
 		return 0, err
 	}
 	defer f.Close()
-	bytesWritten, err := f.Write(contents)
-	return bytesWritten, err
+	return f.Write(contents)
 }
 
 func main() {
@@ -40,10 +42,12 @@ func main() {
 				o.Println(versionString)
 				os.Exit(0)
 			}
-			filename := "pastefile.txt"
+			var filename string
 			// Check if a filename is given
 			if c.NArg() > 0 {
 				filename = c.Args().Slice()[0]
+			} else {
+				filename = defaultFilename
 			}
 			bytesWritten, err := writeFromClipboard(filename)
 			if err != nil {
