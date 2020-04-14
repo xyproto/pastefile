@@ -4,12 +4,12 @@ import (
 	"github.com/urfave/cli/v2"
 	"github.com/xyproto/clip"
 	"github.com/xyproto/textoutput"
+	"github.com/xyproto/ask"
 	"os"
 )
 
 const (
-	versionString   = "pastefile 0.3.1"
-	defaultFilename = "pastefile.txt"
+	versionString   = "pastefile 0.4.0"
 )
 
 // Write to a file, using the contents from the clipboard
@@ -47,7 +47,7 @@ func main() {
 			if c.NArg() > 0 {
 				filename = c.Args().Slice()[0]
 			} else {
-				filename = defaultFilename
+				filename = ask.Ask("filename:")
 			}
 			bytesWritten, err := writeFromClipboard(filename)
 			if err != nil {
