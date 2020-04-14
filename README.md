@@ -12,10 +12,10 @@ Create a file that contains the contents of the clipboard.
     
 ## Requirements
 
-* Go > 1.12
+* Go 1.13 or later
 
 ## General info
 
-* Version: 0.3.1
+* Version: 0.4.0
 * License: MIT
-* Author: Alexander F. Rødseth <xyproto@archlinux.org>
+* Author: Alexander F. Rødseth &lt;xyproto@archlinux.org&gt;
