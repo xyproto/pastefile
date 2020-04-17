@@ -16,6 +16,6 @@ Create a file that contains the contents of the clipboard.
 
 ## General info
 
-* Version: 0.4.0
+* Version: 0.5.0
 * License: MIT
 * Author: Alexander F. Rødseth &lt;xyproto@archlinux.org&gt;

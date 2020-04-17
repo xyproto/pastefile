@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	versionString = "pastefile 0.4.0"
+	versionString = "pastefile 0.5.0"
 )
 
 // Write to a file, using the contents from the clipboard
