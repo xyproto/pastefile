@@ -28,6 +28,12 @@ func writeFromClipboard(filename string) (int, error) {
 	return f.Write(contents)
 }
 
+// exists checks if the given path exists
+func exists(path string) bool {
+	_, err := os.Stat(path)
+	return err == nil
+}
+
 func main() {
 	o := textoutput.New()
 	if appErr := (&cli.App{
@@ -47,9 +53,15 @@ func main() {
 			if c.NArg() > 0 {
 				filename = c.Args().Slice()[0]
 			} else {
-				o.Print("<yellow>filename:</yellow> <cyan>")
-				filename = ask.ReadLn()
-				o.Print("<cyan>")
+				for {
+					o.Print("<yellow>filename:</yellow> <blue>")
+					filename = ask.ReadLn()
+					o.Print("</blue>")
+					if !exists(filename) {
+						break
+					}
+					o.Println("<red>file already exists</red>")
+				}
 			}
 			bytesWritten, err := writeFromClipboard(filename)
 			if err != nil {
@@ -60,7 +72,7 @@ func main() {
 				if bytesWritten != 1 {
 					plural = "s"
 				}
-				o.Printf("<blue>%d byte%s</blue> <off>written to <cyan>%s</cyan>\n", bytesWritten, plural, filename)
+				o.Printf("<green>%d byte%s</green> <white>written to</white> <blue>%s</blue>\n", bytesWritten, plural, filename)
 			}
 			return nil
 		},
