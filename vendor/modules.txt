@@ -14,7 +14,7 @@ github.com/urfave/cli/v2
 # github.com/xyproto/ask v1.0.0
 ## explicit
 github.com/xyproto/ask
-# github.com/xyproto/clip v0.3.1
+# github.com/xyproto/clip v0.3.2-0.20200417125902-2184af84f7bf
 ## explicit
 github.com/xyproto/clip
 # github.com/xyproto/textoutput v1.11.0
