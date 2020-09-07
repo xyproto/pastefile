@@ -1,15 +1,17 @@
 package main
 
 import (
+	"os"
+	"strings"
+
 	"github.com/urfave/cli/v2"
 	"github.com/xyproto/ask"
 	"github.com/xyproto/clip"
 	"github.com/xyproto/textoutput"
-	"os"
 )
 
 const (
-	versionString = "pastefile 0.5.0"
+	versionString = "pastefile 0.5.1"
 )
 
 // Write to a file, using the contents from the clipboard
@@ -57,6 +59,9 @@ func main() {
 					o.Print("<yellow>filename:</yellow> <blue>")
 					filename = ask.ReadLn()
 					o.Print("</blue>")
+					if len(strings.TrimSpace(filename)) == 0 {
+						continue
+					}
 					if !exists(filename) {
 						break
 					}
