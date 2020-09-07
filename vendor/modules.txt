@@ -1,7 +1,14 @@
 # github.com/cpuguy83/go-md2man/v2 v2.0.0
 ## explicit
 github.com/cpuguy83/go-md2man/v2/md2man
-# github.com/pkg/term v0.0.0-20190109203006-aa71e9d9e942
+# github.com/mattn/go-colorable v0.1.7
+github.com/mattn/go-colorable
+# github.com/mattn/go-isatty v0.0.12
+github.com/mattn/go-isatty
+# github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d
+## explicit
+github.com/mgutz/ansi
+# github.com/pkg/term v0.0.0-20200520122047-c3ffed290a03
 github.com/pkg/term
 github.com/pkg/term/termios
 # github.com/russross/blackfriday/v2 v2.0.1
@@ -17,11 +24,13 @@ github.com/xyproto/ask
 # github.com/xyproto/clip v0.3.2-0.20200417125902-2184af84f7bf
 ## explicit
 github.com/xyproto/clip
-# github.com/xyproto/textoutput v1.11.0
+# github.com/xyproto/textoutput v1.12.2
 ## explicit
 github.com/xyproto/textoutput
-# github.com/xyproto/vt100 v1.8.3
-github.com/xyproto/vt100
-# golang.org/x/sys v0.0.0-20200413165638-669c56c373c4
+# github.com/xyproto/vt100 v1.8.6
 ## explicit
+github.com/xyproto/vt100
+# golang.org/x/sys v0.0.0-20200905004654-be1d3432aa8f
+## explicit
+golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
