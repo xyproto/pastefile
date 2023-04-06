@@ -14,10 +14,10 @@ Create a file that contains the contents of the clipboard.
 
 ## Requirements
 
-* Go 1.17 or later
+* Go 1.18 or later
 
 ## General info
 
-* Version: 0.6.0
+* Version: 0.6.1
 * License: BSD-3
 * Author: Alexander F. Rødseth &lt;xyproto@archlinux.org&gt;
