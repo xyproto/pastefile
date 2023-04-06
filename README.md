@@ -10,14 +10,14 @@ Create a file that contains the contents of the clipboard.
 
 ## Installation
 
-    go get -u github.com/xyproto/pastefile
+    go install github.com/xyproto/pastefile@latest
 
 ## Requirements
 
-* Go 1.13 or later
+* Go 1.17 or later
 
 ## General info
 
-* Version: 0.5.1
-* License: MIT
+* Version: 0.6.0
+* License: BSD-3
 * Author: Alexander F. Rødseth &lt;xyproto@archlinux.org&gt;
