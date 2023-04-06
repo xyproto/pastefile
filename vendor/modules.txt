@@ -1,38 +1,43 @@
 # github.com/cpuguy83/go-md2man/v2 v2.0.2
+## explicit; go 1.11
 github.com/cpuguy83/go-md2man/v2/md2man
 # github.com/mattn/go-colorable v0.1.13
-## explicit
+## explicit; go 1.15
 github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.18
-## explicit
+## explicit; go 1.15
 github.com/mattn/go-isatty
 # github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d
+## explicit
 github.com/mgutz/ansi
 # github.com/pkg/term v1.2.0-beta.2.0.20210419004637-f749b98bd0ba
+## explicit; go 1.14
 github.com/pkg/term
 github.com/pkg/term/termios
 # github.com/russross/blackfriday/v2 v2.1.0
+## explicit
 github.com/russross/blackfriday/v2
 # github.com/urfave/cli/v2 v2.25.1
-## explicit
+## explicit; go 1.18
 github.com/urfave/cli/v2
 # github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673
+## explicit
 github.com/xrash/smetrics
 # github.com/xyproto/ask v1.0.0
-## explicit
+## explicit; go 1.12
 github.com/xyproto/ask
 # github.com/xyproto/clip v0.3.2
-## explicit
+## explicit; go 1.11
 github.com/xyproto/clip
 # github.com/xyproto/env v1.9.1
-## explicit
+## explicit; go 1.15
 github.com/xyproto/env
 # github.com/xyproto/textoutput v1.14.1
-## explicit
+## explicit; go 1.10
 github.com/xyproto/textoutput
 # github.com/xyproto/vt100 v1.11.4
-## explicit
+## explicit; go 1.10
 github.com/xyproto/vt100
 # golang.org/x/sys v0.7.0
-## explicit
+## explicit; go 1.17
 golang.org/x/sys/unix
