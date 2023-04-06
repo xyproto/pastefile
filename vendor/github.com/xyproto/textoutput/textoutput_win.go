@@ -1,3 +1,4 @@
+//go:build windows
 // +build windows
 
 // Package textoutput offers a simple way to use vt100 and output colored text
@@ -5,10 +6,12 @@ package textoutput
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"strings"
 
 	"github.com/mgutz/ansi"
+	"github.com/xyproto/env"
 )
 
 // CharAttribute is a rune and a color attribute
@@ -26,13 +29,14 @@ type TextOutput struct {
 	darkReplacer  *strings.Replacer
 }
 
+// Respect the NO_COLOR environment variable
+var EnvNoColor = env.Bool("NO_COLOR")
+
 // New creates a new TextOutput struct, which is
 // enabled by default and with colors turned on.
 // If the NO_COLOR environment variable is set, colors are disabled.
 func New() *TextOutput {
-	// Respect the NO_COLOR environment variable
-	color := len(os.Getenv("NO_COLOR")) == 0
-	o := &TextOutput{color, true, nil, nil}
+	o := &TextOutput{!EnvNoColor, true, nil, nil}
 	o.initializeTagReplacers()
 	return o
 }
@@ -42,8 +46,7 @@ func New() *TextOutput {
 // output can be enabled (verbose) or disabled (silent).
 // If NO_COLOR is set, colors are disabled, regardless.
 func NewTextOutput(color, enabled bool) *TextOutput {
-	// Respect the NO_COLOR environment variable
-	if os.Getenv("NO_COLOR") != "" {
+	if EnvNoColor {
 		color = false
 	}
 	o := &TextOutput{color, enabled, nil, nil}
@@ -76,22 +79,53 @@ func (o *TextOutput) Println(msg ...interface{}) {
 	}
 }
 
+// Write a message to the given io.Writer if output is enabled
+func (o *TextOutput) Fprintln(w io.Writer, msg ...interface{}) {
+	if o.enabled {
+		fmt.Fprintln(w, o.InterfaceTags(msg...))
+	}
+}
+
 // Write a message to stdout if output is enabled
 func (o *TextOutput) Printf(msg ...interface{}) {
-	if o.enabled {
-		if len(msg) == 0 {
-			return
-		} else if len(msg) == 1 {
-			if fmtString, ok := msg[0].(string); ok {
-				fmt.Print(fmtString)
-			}
-		} else { // > 1
-			if fmtString, ok := msg[0].(string); ok {
-				fmt.Printf(o.InterfaceTags(fmtString), msg[1:]...)
-			} else {
-				// fail
-				fmt.Printf("%v", msg...)
-			}
+	if !o.enabled {
+		return
+	}
+	count := len(msg)
+	if count == 0 {
+		return
+	} else if count == 1 {
+		if fmtString, ok := msg[0].(string); ok {
+			fmt.Print(fmtString)
+		}
+	} else { // > 1
+		if fmtString, ok := msg[0].(string); ok {
+			fmt.Printf(o.InterfaceTags(fmtString), msg[1:]...)
+		} else {
+			// fail
+			fmt.Printf("%v", msg...)
+		}
+	}
+}
+
+// Write a message to the given io.Writer if output is enabled
+func (o *TextOutput) Fprintf(w io.Writer, msg ...interface{}) {
+	if !o.enabled {
+		return
+	}
+	count := len(msg)
+	if count == 0 {
+		return
+	} else if count == 1 {
+		if fmtString, ok := msg[0].(string); ok {
+			fmt.Fprint(w, fmtString)
+		}
+	} else { // > 1
+		if fmtString, ok := msg[0].(string); ok {
+			fmt.Fprintf(w, o.InterfaceTags(fmtString), msg[1:]...)
+		} else {
+			// fail
+			fmt.Fprintf(w, "%v", msg...)
 		}
 	}
 }
@@ -100,6 +134,13 @@ func (o *TextOutput) Printf(msg ...interface{}) {
 func (o *TextOutput) Print(msg ...interface{}) {
 	if o.enabled {
 		fmt.Print(o.InterfaceTags(msg...))
+	}
+}
+
+// Write a message to the given io.Writer if output is enabled
+func (o *TextOutput) Fprint(w io.Writer, msg ...interface{}) {
+	if o.enabled {
+		fmt.Fprint(w, o.InterfaceTags(msg...))
 	}
 }
 

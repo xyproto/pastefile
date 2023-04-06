@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/xyproto/clip.svg?branch=master)](https://travis-ci.com/xyproto/clip) [![GoDoc](https://godoc.org/github.com/xyproto/clip?status.svg)](http://godoc.org/github.com/xyproto/clip)
+[![GoDoc](https://godoc.org/github.com/xyproto/clip?status.svg)](http://godoc.org/github.com/xyproto/clip)
 
 # Clipboard for Go
 
@@ -44,5 +44,5 @@ Copy shell command:
 
 ### General info
 
-* Version: 0.3.1
-* License: BSD
+* Version: 0.3.2
+* License: BSD-3

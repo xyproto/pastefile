@@ -1,12 +1,12 @@
 package vt100
 
 import (
-	"bytes"
 	"fmt"
 	"image/color"
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 // Color aliases, for ease of use, not for performance
@@ -67,6 +67,7 @@ var (
 
 	// Default colors (usually gray)
 	Default           = NewAttributeColor("39")
+	DefaultBackground = NewAttributeColor("49")
 	BackgroundDefault = NewAttributeColor("49")
 
 	// Lookup tables
@@ -256,11 +257,34 @@ func b2s(b byte) string {
 	return strconv.Itoa(int(b))
 }
 
+var (
+	scache = make(map[string]string)
+	smut   = &sync.RWMutex{}
+)
+
 // Return the VT100 terminal codes for setting this combination of attributes and color attributes
 func (ac AttributeColor) String() string {
+	id := string(ac)
+
+	smut.RLock()
+	if s, has := scache[id]; has {
+		smut.RUnlock()
+		return s
+	}
+	smut.RUnlock()
+
 	attributeString := strings.Join(mapBS(ac, b2s), ";")
 	// Replace '{attr1};...;{attrn}' with the generated attribute string and return
-	return get(specVT100, "Set Attribute Mode", map[string]string{"{attr1};...;{attrn}": attributeString})
+	s := get(specVT100, "Set Attribute Mode", map[string]string{"{attr1};...;{attrn}": attributeString})
+
+	// Store the value in the cache
+	if len(s) > 0 {
+		smut.Lock()
+		scache[id] = s
+		smut.Unlock()
+	}
+
+	return s
 }
 
 // Get the full string needed for outputting colored texti, with the text and stopping the color attribute
@@ -283,9 +307,16 @@ func (ac AttributeColor) Stop(text string) string {
 	return text + NoColor()
 }
 
+var maybeNoColor *string
+
 // Return a string for resetting the attributes
 func Stop() string {
-	return NoColor()
+	if maybeNoColor != nil {
+		return *maybeNoColor
+	}
+	s := NoColor()
+	maybeNoColor = &s
+	return s
 }
 
 // Use this color to output the given text. Will reset the attributes at the end of the string. Outputs a newline.
@@ -299,21 +330,19 @@ func (ac AttributeColor) Error(text string) {
 }
 
 func (ac AttributeColor) Combine(other AttributeColor) AttributeColor {
-	// Set an initial size of the map, where keys are attributes and values are bool
-	amap := make(map[byte]bool, len(ac)+len(other))
-	for _, attr := range ac {
-		amap[attr] = true
+	for _, a1 := range ac {
+		a2has := false
+		for _, a2 := range other {
+			if a1 == a2 {
+				a2has = true
+				break
+			}
+		}
+		if !a2has {
+			other = append(other, a1)
+		}
 	}
-	for _, attr := range other {
-		amap[attr] = true
-	}
-	newAttributes := make(AttributeColor, len(amap))
-	index := 0
-	for attr := range amap {
-		newAttributes[index] = attr
-		index++
-	}
-	return AttributeColor(newAttributes)
+	return AttributeColor(other)
 }
 
 // Return a new AttributeColor that has "Bright" added to the list of attributes
@@ -350,14 +379,7 @@ func TrueColor(fg color.Color, text string) string {
 }
 
 // Equal checks if two colors have the same attributes, in the same order.
-func (ac AttributeColor) Equal(other AttributeColor) bool {
-	la := len(ac)
-	lo := len(other)
-	if la == 2 && lo == 2 {
-		return ac[0] == other[0] && ac[1] == other[1]
-	}
-	if la == 1 && lo == 1 {
-		return ac[0] == other[0]
-	}
-	return bytes.Equal(ac, other)
+// The values that are being compared must have at least 1 byte in them.
+func (ac *AttributeColor) Equal(other AttributeColor) bool {
+	return string(*ac) == string(other)
 }
